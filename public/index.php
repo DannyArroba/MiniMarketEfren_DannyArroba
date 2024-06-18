@@ -6,7 +6,6 @@
     <title>Registrar Producto</title>
     <!-- Tailwind CSS -->
     <link rel="stylesheet" href="./css/tailwind.css">
-    
 </head>
 <body class="bg-gray-100 p-6">
 <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
@@ -77,7 +76,8 @@ if (!empty($productos)) {
 
     // Función para mostrar la tabla de productos
     function mostrarTabla($productos) {
-        echo "<table class='w-full bg-white border border-gray-200 mb-4'>";
+        echo "<div class='overflow-x-auto'>";
+        echo "<table class='min-w-full bg-white border border-gray-200'>";
         echo "<thead>";
         echo "<tr><th class='py-2 px-2 bg-gray-200 text-gray-700 text-sm'>Nombre del Producto</th><th class='py-2 px-2 bg-gray-200 text-gray-700 text-sm'>Precio por Unidad</th><th class='py-2 px-2 bg-gray-200 text-gray-700 text-sm'>Cantidad en Inventario</th><th class='py-2 px-2 bg-gray-200 text-gray-700 text-sm'>Valor Total</th><th class='py-2 px-2 bg-gray-200 text-gray-700 text-sm'>Estado</th></tr>";
         echo "</thead>";
@@ -95,6 +95,7 @@ if (!empty($productos)) {
         }
         echo "</tbody>";
         echo "</table>";
+        echo "</div>";
     }
 
     // Mostrar los productos registrados
