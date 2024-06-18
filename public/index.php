@@ -36,6 +36,21 @@
 $productos = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validación de datos
+    function validarDatos($nombre, $precio, $cantidad) {
+        $errores = [];
+        if (empty($nombre)) {
+            $errores["nombre"] = "El nombre del producto es obligatorio.";
+        }
+        if (!is_numeric($precio) || $precio <= 0) {
+            $errores["precio"] = "El precio debe ser un número positivo.";
+        }
+        if (!is_numeric($cantidad) || $cantidad < 0) {
+            $errores["cantidad"] = "La cantidad debe ser un número no negativo.";
+        }
+        return $errores;
+    }
+
     // Función para guardar los datos del formulario en un array asociativo
     function guardarProducto(&$productos, $nombre, $precio, $cantidad) {
         $productos[] = [
@@ -45,25 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ];
     }
 
-    // Validación de datos
-    $errores = [];
-    if (empty($_POST["nombre"])) {
-        $errores["nombre"] = "El nombre del producto es obligatorio.";
-    }
-    if (!is_numeric($_POST["precio"]) || $_POST["precio"] <= 0) {
-        $errores["precio"] = "El precio debe ser un número positivo.";
-    }
-    if (!is_numeric($_POST["cantidad"]) || $_POST["cantidad"] < 0) {
-        $errores["cantidad"] = "La cantidad debe ser un número no negativo.";
-    }
-
-    if (empty($errores)) {
-        // Guardar producto si no hay errores
-        guardarProducto($productos, $_POST["nombre"], $_POST["precio"], $_POST["cantidad"]);
-    }
-}
-
-if (!empty($productos)) {
     // Función para calcular el valor total del producto
     function calcularValorTotal($precio, $cantidad) {
         return $precio * $cantidad;
@@ -74,6 +70,18 @@ if (!empty($productos)) {
         return $cantidad > 0 ? "En stock" : "Agotado";
     }
 
+    $nombre = $_POST["nombre"];
+    $precio = $_POST["precio"];
+    $cantidad = $_POST["cantidad"];
+    $errores = validarDatos($nombre, $precio, $cantidad);
+
+    if (empty($errores)) {
+        // Guardar producto si no hay errores
+        guardarProducto($productos, $nombre, $precio, $cantidad);
+    }
+}
+
+if (!empty($productos)) {
     // Función para mostrar la tabla de productos
     function mostrarTabla($productos) {
         echo "<div class='overflow-x-auto'>";
@@ -86,11 +94,11 @@ if (!empty($productos)) {
             $valorTotal = calcularValorTotal($producto["precio"], $producto["cantidad"]);
             $estado = determinarEstado($producto["cantidad"]);
             echo "<tr>";
-            echo "<td class='py-2 px-2 border-t text-sm'>{$producto['nombre']}</td>";
-            echo "<td class='py-2 px-2 border-t text-sm'>\${$producto['precio']}</td>";
-            echo "<td class='py-2 px-2 border-t text-sm'>{$producto['cantidad']}</td>";
-            echo "<td class='py-2 px-2 border-t text-sm'>\${$valorTotal}</td>";
-            echo "<td class='py-2 px-2 border-t text-sm'>{$estado}</td>";
+            echo "<td class='py-2 px-2 border-t text-center text-sm'>{$producto['nombre']}</td>";
+            echo "<td class='py-2 px-2 border-t text-center text-sm'>\${$producto['precio']}</td>";
+            echo "<td class='py-2 px-2 border-t text-center text-sm'>{$producto['cantidad']}</td>";
+            echo "<td class='py-2 px-2 border-t text-center text-sm'>\${$valorTotal}</td>";
+            echo "<td class='py-2 px-2 border-t text-center text-sm'>{$estado}</td>";
             echo "</tr>";
         }
         echo "</tbody>";
@@ -106,7 +114,8 @@ if (!empty($productos)) {
 }
 ?>
 
-<script src="./js/validation.js"></script>
+<script src="./js/validation.js">
+</script>
 
 </body>
 </html>
